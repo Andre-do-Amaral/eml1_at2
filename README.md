@@ -1,4 +1,4 @@
 # ML Project
 
-**Versão atual:** 0.4.0
+**Versão atual:** 0.5.0
 
