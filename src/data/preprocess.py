@@ -3,10 +3,14 @@ from sklearn.impute import KNNImputer
 from sklearn.model_selection import train_test_split
 
 
-def impute_missing_values(df: pd.DataFrame, n_neighbors: int = 4) -> pd.DataFrame:
+def impute_missing_values(df: pd.DataFrame, n_neighbors: int = 4) -> KNNImputer:
+    """
+    Imputa valores ausentes usando o KNNImputer.
+    Retorna o objeto do imputador para aplicar transformações futuras.
+    """
     knn_imputer = KNNImputer(n_neighbors=n_neighbors)
-    df.iloc[:, :-1] = knn_imputer.fit_transform(df.iloc[:, :-1])
-    return df
+    knn_imputer.fit(df)  # Treinar o imputador
+    return knn_imputer
 
 
 def remove_outliers(df: pd.DataFrame, columns: list) -> pd.DataFrame:

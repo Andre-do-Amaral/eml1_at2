@@ -52,14 +52,19 @@ bump_major:
 # Comando para treinamento do modelo
 train:
 	@echo "Treinando o modelo de Machine Learning..."
-	poetry run python main.py train
+	poetry run python src/main.py train
 
 # Comando para avaliar o modelo
 evaluate:
 	@echo "Avaliando o modelo..."
-	poetry run python main.py evaluate
+	poetry run python src/main.py evaluate
 
 # Comando para inferência
 predict:
 	@echo "Executando inferência com o modelo treinado..."
-	poetry run python main.py predict
+	poetry run python src/main.py predict
+
+# Registrar experimento no MLflow
+mlflow_register:
+	@echo "Registrando experimento no MLflow..."
+	poetry run python src/main.py mlflow_register
