@@ -36,6 +36,7 @@ build:
 	@echo "Fazendo o build do projeto com Poetry..."
 	poetry build
 
+
 # Incrementa a versão do projeto (patch, minor ou major)
 bump_patch:
 	@echo "Incrementando a versão (patch)..."
@@ -52,6 +53,7 @@ bump_major:
 # Comando para treinamento do modelo
 train:
 	@echo "Treinando o modelo de Machine Learning..."
+#	docker run --rm -it ml_project make train
 	poetry run python src/main.py train
 
 # Comando para avaliar o modelo

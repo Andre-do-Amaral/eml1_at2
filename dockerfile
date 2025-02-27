@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5000
 #"python", "MEU_PROJETO/main.py",
 # Comando principal: executar o main.py com o Poetry
-CMD ["poetry", "run", "mlflow","server","--host","0.0.0.0","--port","5000","--backend-store-uri","sqlite:///mlflow.db","--default-articfact-root","/root/meu_projeto/mlruns"]
+CMD ["poetry", "run", "mlflow","server","--host","0.0.0.0","--port","5000","--backend-store-uri","sqlite:///mlflow.db","--default-artifact-root","/root/meu_projeto/mlruns"]
