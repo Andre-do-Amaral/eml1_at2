@@ -12,10 +12,11 @@ cache:
     - ~/.cache/pypoetry
     - ~/.cache/pip
 
-# Testes unitários apenas em branches feature/*
 unit_tests:
   stage: test
   image: python:3.9
+  tags:
+    - feature  # tag que seu runner suporta
   before_script:
     - pip install --upgrade pip
     - pip install poetry
@@ -25,10 +26,11 @@ unit_tests:
   only:
     - /^feature\/.*$/
 
-# Teste de integração (executar main.py) na release
 integration_test:
   stage: test
   image: python:3.9
+  tags:
+    - release  # tag do runner para releases
   before_script:
     - pip install --upgrade pip
     - pip install poetry
@@ -38,9 +40,10 @@ integration_test:
   only:
     - release
 
-# Não roda nada na branch main
 skip_main:
   stage: test
+  tags:
+    - ci  # qualquer tag registrada serve
   script:
     - echo "Nada é executado na main"
   only:
