@@ -14,7 +14,7 @@ cache:
 
 unit_tests:
   stage: test
-  image: python:3.9
+  image: python:3.12
   tags:
     - feature  # tag que seu runner suporta
   before_script:
