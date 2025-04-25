@@ -98,3 +98,5 @@ meu_projeto/
 
 - André Amaral — [https://github.com/Andre-do-Amaral]
 - Jefferson Correia — [https://github.com/Jefferson-Morais-Correia]
+
+## Uma hora funciona
