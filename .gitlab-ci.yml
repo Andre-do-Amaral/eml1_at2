@@ -1,0 +1,47 @@
+stages:
+  - test
+
+variables:
+  POETRY_VIRTUALENVS_CREATE: "false"
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - .venv
+    - ~/.cache/pypoetry
+    - ~/.cache/pip
+
+# Testes unitários apenas em branches feature/*
+unit_tests:
+  stage: test
+  image: python:3.9
+  before_script:
+    - pip install --upgrade pip
+    - pip install poetry
+    - poetry install --no-root
+  script:
+    - pytest tests/
+  only:
+    - /^feature\/.*$/
+
+# Teste de integração (executar main.py) na release
+integration_test:
+  stage: test
+  image: python:3.9
+  before_script:
+    - pip install --upgrade pip
+    - pip install poetry
+    - poetry install --no-root
+  script:
+    - python src/main.py
+  only:
+    - release
+
+# Não roda nada na branch main
+skip_main:
+  stage: test
+  script:
+    - echo "Nada é executado na main"
+  only:
+    - main
