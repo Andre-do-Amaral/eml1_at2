@@ -28,7 +28,7 @@ unit_tests:
 
 integration_test:
   stage: test
-  image: python:3.9
+  image: python:3.12
   tags:
     - release  # tag do runner para releases
   before_script:
