@@ -22,7 +22,7 @@ unit_tests:
     - pip install poetry
     - poetry install --no-root
   script:
-    - pytest tests/
+    - poetry run pytest tests/
   only:
     - /^feature\/.*$/
 
