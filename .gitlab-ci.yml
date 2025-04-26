@@ -14,7 +14,7 @@ cache:
 
 unit_tests:
   stage: test
-  image: python:3.9
+  image: python:3.12
   tags:
     - feature  # tag que seu runner suporta
   before_script:
@@ -22,13 +22,13 @@ unit_tests:
     - pip install poetry
     - poetry install --no-root
   script:
-    - pytest tests/
+    - poetry run pytest tests/
   only:
     - /^feature\/.*$/
 
 integration_test:
   stage: test
-  image: python:3.9
+  image: python:3.12
   tags:
     - release  # tag do runner para releases
   before_script:
@@ -47,4 +47,6 @@ skip_main:
   script:
     - echo "Nada é executado na main"
   only:
-    - main
+    - master
+
+#PO FUNCIONA AI VAI 

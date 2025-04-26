@@ -23,6 +23,7 @@ kaggle = "^1.6.17"
 [tool.poetry.group.dev.dependencies]
 bump2version = "^1.0.1"
 black = "^25.1.0"
+pytest = "^8.1.1"  # ou a versão mais recente disponível
 
 [tool.bumpversion]
 current_version = "0.5.0"
