@@ -1,9 +1,11 @@
 stages:
+  - build
   - test
 
 variables:
-  POETRY_VIRTUALENVS_CREATE: "false"
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  DOCKER_DRIVER: overlay2  # Para evitar problemas de filesystem
+  DOCKER_TLS_CERTDIR: ""   # Desabilita TLS interno para Docker no GitLab Runner
+  IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
 
 cache:
   paths:
@@ -12,11 +14,29 @@ cache:
     - ~/.cache/pypoetry
     - ~/.cache/pip
 
+# Etapa para construir a imagem Docker
+build_image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  tags:
+    - docker  # Certifique-se que seu runner suporta docker:dind
+  script:
+    - docker build -t $IMAGE_NAME .
+    - docker push $IMAGE_NAME
+  only:
+    - merge_requests
+    - master
+    - release
+    - /^feature\/.*$/
+
+# Etapa para rodar os testes de unidade
 unit_tests:
   stage: test
   image: python:3.12
   tags:
-    - feature  # tag que seu runner suporta
+    - feature
   before_script:
     - pip install --upgrade pip
     - pip install poetry
@@ -26,28 +46,29 @@ unit_tests:
   only:
     - /^feature\/.*$/
 
+# Etapa para rodar o seu evaluate com o MLflow rodando
 integration_test:
   stage: test
-  image: python:3.12
+  image: docker:latest
+  services:
+    - docker:dind
   tags:
-    - release  # tag do runner para releases
-  before_script:
-    - pip install --upgrade pip
-    - pip install poetry
-    - poetry install --no-root
+    - docker
   script:
-    - ls -R
-    - ls -R src/
-    - python src/main.py evaluate
+    - docker run --rm $IMAGE_NAME
   only:
     - release
 
+# Etapa para não rodar nada na main se não precisar
 skip_main:
   stage: test
   tags:
-    - ci  # qualquer tag registrada serve
+    - ci
   script:
     - echo "Nada é executado na main"
+  only:
+    - master
+
   only:
     - master
 
