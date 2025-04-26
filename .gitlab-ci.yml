@@ -6,7 +6,6 @@ variables:
   DOCKER_DRIVER: overlay2  # Para evitar problemas de filesystem
   DOCKER_TLS_CERTDIR: ""   # Desabilita TLS interno para Docker no GitLab Runner
   IMAGE_NAME: "${CI_REGISTRY_IMAGE}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
-# Outras configurações permanecem iguais...
 
 cache:
   paths:
@@ -23,8 +22,8 @@ build_image:
     - docker:dind
   script:
     - echo "IMAGE_NAME: $IMAGE_NAME"
-    - docker build -t $IMAGE_NAME .
-    - docker push $IMAGE_NAME
+    - docker build -t "$IMAGE_NAME" .
+    - docker push "$IMAGE_NAME"
   only:
     - merge_requests
     - master
@@ -55,7 +54,7 @@ integration_test:
   tags:
     - docker
   script:
-    - docker run --rm $IMAGE_NAME
+    - docker run --rm "$IMAGE_NAME"
   only:
     - release
 
@@ -68,6 +67,3 @@ skip_main:
     - echo "Nada é executado na main"
   only:
     - master
-
-
-#PO FUNCIONA AI VAI 
