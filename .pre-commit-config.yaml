@@ -1,23 +1,70 @@
-repos:
+stages:
+  - build
+  - test
 
-- repo: https://github.com/astral-sh/ruff-pre-commit
-  # Ruff version.
-  rev: v0.9.7
-  hooks:
-    # Run the linter.
-    - id: ruff
-      args: [ --fix ]
-    # Run the formatter.
-    - id: ruff-format
+variables:
+  DOCKER_DRIVER: overlay2  # Para evitar problemas de filesystem
+  DOCKER_TLS_CERTDIR: ""   # Desabilita TLS interno para Docker no GitLab Runner
+  IMAGE_NAME: "${CI_REGISTRY_IMAGE}/$CI_COMMIT_REF_SLUG"
+  IMAGE_NAME_WITH_TAG: "${IMAGE_NAME}:${CI_COMMIT_REF_SLUG:-latest}"
 
-- repo: https://github.com/psf/black
-  rev: 25.1.0
-  hooks:
-    - id: black
+cache:
+  paths:
+    - .cache/pip
+    - .venv
+    - ~/.cache/pypoetry
+    - ~/.cache/pip
 
+# Etapa para construir a imagem Docker
+build_image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - echo "IMAGE_NAME: $IMAGE_NAME_WITH_TAG"
+    - docker build -t "$IMAGE_NAME_WITH_TAG" .
+    - docker push "$IMAGE_NAME_WITH_TAG"
+  only:
+    - merge_requests
+    - master
+    - release
+    - /^feature\/.*$/
 
+# Etapa para rodar os testes de unidade
+unit_tests:
+  stage: test
+  image: python:3.12
+  tags:
+    - feature
+  before_script:
+    - pip install --upgrade pip
+    - pip install poetry
+    - poetry install --no-root
+  script:
+    - poetry run pytest tests/
+  only:
+    - /^feature\/.*$/
 
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v5.0.0
-  hooks:
-    - id: trailing-whitespace
+# Etapa para rodar o seu evaluate com o MLflow rodando
+integration_test:
+  stage: test
+  image: docker:latest
+  services:
+    - docker:dind
+  tags:
+    - docker
+  script:
+    - docker run --rm "$IMAGE_NAME_WITH_TAG"
+  only:
+    - release
+
+# Etapa para não rodar nada na main se não precisar
+skip_main:
+  stage: test
+  tags:
+    - ci
+  script:
+    - echo "Nada é executado na main"
+  only:
+    - master
