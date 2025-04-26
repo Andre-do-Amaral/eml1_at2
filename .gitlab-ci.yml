@@ -20,8 +20,6 @@ build_image:
   image: docker:latest
   services:
     - docker:dind
-  tags:
-    - docker  # Certifique-se que seu runner suporta docker:dind
   script:
     - docker build -t $IMAGE_NAME .
     - docker push $IMAGE_NAME
