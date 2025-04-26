@@ -1,5 +1,8 @@
 # Projeto de Predição de Potabilidade da Água 💧 com ML + MLflow
 
+
+Bom dia!!
+
 Este projeto realiza **análise e predição de potabilidade da água** com base no dataset `water_potability.csv`, utilizando um modelo de Decision Tree. Todo o fluxo — desde o carregamento dos dados até a avaliação do modelo — é monitorado via **MLflow**.
 
 O código está empacotado em **containers Docker**, permitindo reprodutibilidade e portabilidade do experimento.
