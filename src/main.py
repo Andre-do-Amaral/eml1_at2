@@ -12,7 +12,7 @@ import mlflow
 
 # Função para registrar experimento no MLflow
 def mlflow_register():
-    ml_manager = MLFlowManager("http://172.30.56.19:5000")
+    ml_manager = MLFlowManager()
     ml_manager.start_experiment("Experimento_ML")
     print("Experimento registrado no MLflow.")
     mlflow.end_run()
@@ -23,7 +23,7 @@ def train(X_train, y_train):
     model = ModelFactory.create_model("decision_tree", max_depth=5)
     model = train_model(model, X_train, y_train)
     print("Passou do treino")
-    ml_manager = MLFlowManager("http://172.30.56.19:5000")
+    ml_manager = MLFlowManager()
     print("Conectou com o MLFLOW")
     ml_manager.start_experiment("Experimento_ML")
     print("Start no experimento")
@@ -39,7 +39,7 @@ def evaluate(model, X_test, y_test):
     print("Relatório de Avaliação:")
     print(report)
 
-    ml_manager = MLFlowManager("http://172.30.56.19:5000")
+    ml_manager = MLFlowManager()
     ml_manager.start_experiment("Experimento_ML")
     ml_manager.log_metrics(report["weighted avg"])
     print("Avaliação registrada no MLflow.")
@@ -52,7 +52,7 @@ def predict(model, X_predict):
     print("Previsões:")
     print(predictions)
 
-    ml_manager = MLFlowManager("http://172.30.56.19:5000")
+    ml_manager = MLFlowManager()
     ml_manager.start_experiment("Experimento_ML")
     ml_manager.log_text(str(predictions), "predictions.txt")
     print("Previsões registradas no MLflow.")
