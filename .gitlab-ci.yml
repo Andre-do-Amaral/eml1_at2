@@ -38,7 +38,7 @@ integration_test:
   script:
     - ls -R
     - ls -R src/
-    - python src/main.py
+    - python src/main.py evaluate
   only:
     - release
 
