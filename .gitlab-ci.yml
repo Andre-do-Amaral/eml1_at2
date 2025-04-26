@@ -21,9 +21,10 @@ build_image:
   services:
     - docker:dind
   script:
-    - echo "IMAGE_NAME: $IMAGE_NAME"
-    - docker build -t "$IMAGE_NAME" .
-    - docker push "$IMAGE_NAME"
+    - |
+      echo "IMAGE_NAME: $IMAGE_NAME"
+      docker build -t "$IMAGE_NAME" .
+      docker push "$IMAGE_NAME"
   only:
     - merge_requests
     - master
