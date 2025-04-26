@@ -5,7 +5,7 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2  # Para evitar problemas de filesystem
   DOCKER_TLS_CERTDIR: ""   # Desabilita TLS interno para Docker no GitLab Runner
-  IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  IMAGE_NAME: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG//\//_}"
 
 cache:
   paths:
@@ -67,7 +67,5 @@ skip_main:
   only:
     - master
 
-  only:
-    - master
 
 #PO FUNCIONA AI VAI 
