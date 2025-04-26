@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 class MLFlowManager:
     _instance = None
 
-    def __new__(cls, tracking_uri: str):
+    def __new__(cls, tracking_uri: str = "sqlite:///mlflow.db"):
         if cls._instance is None:
             cls._instance = super(MLFlowManager, cls).__new__(cls)
             try:
