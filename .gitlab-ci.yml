@@ -36,6 +36,8 @@ integration_test:
     - pip install poetry
     - poetry install --no-root
   script:
+    - ls -R
+    - ls -R src/
     - python src/main.py
   only:
     - release
