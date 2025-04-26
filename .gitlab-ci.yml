@@ -47,6 +47,6 @@ skip_main:
   script:
     - echo "Nada é executado na main"
   only:
-    - main
+    - master
 
 #PO FUNCIONA AI VAI 
