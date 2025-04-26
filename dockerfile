@@ -11,7 +11,7 @@ COPY pyproject.toml poetry.lock ./
 RUN pip install poetry && poetry install --no-root
 
 # Copiar o restante do código do projeto -> main.py, etc. O dockerfile apenas irá rodar um servidor mlflow para registrar os artefatos do experimento, o cmd mostrará isso
-COPY src/main.py water_potability.csv ./
+COPY src/main.py src/water_potability.csv ./
 
 #EXPOR PORTA DO MLFLOW PADRAO 5000 (Execução do Mlflow)
 EXPOSE 5000

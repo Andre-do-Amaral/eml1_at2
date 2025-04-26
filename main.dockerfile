@@ -13,7 +13,7 @@ RUN pip install poetry && poetry install --no-root
 # Copiar o restante do código do projeto -> main.py, etc. O dockerfile apenas irá rodar um servidor mlflow para registrar os artefatos do experimento, o cmd mostrará isso
 COPY src/ ./src/
 COPY tests/ ./tests/
-COPY water_potability.csv ./
+#COPY src/water_potability.csv ./
 
 
 # Comando principal: executar o mlflow para poder registrar artefatos de experimentos.
