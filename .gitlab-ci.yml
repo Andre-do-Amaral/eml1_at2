@@ -20,14 +20,15 @@ build_image:
   services:
     - docker:dind
   script:
-    - echo "DEBUG - CI_REGISTRY_IMAGE: $CI_REGISTRY_IMAGE"
-    - echo "DEBUG - CI_COMMIT_REF_SLUG: $CI_COMMIT_REF_SLUG"
-    - echo "DEBUG - Parte 1: ${CI_REGISTRY_IMAGE}/$CI_COMMIT_REF_SLUG:"
-    - echo "DEBUG - Parte 2: $CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
-    - echo "DEBUG - IMAGE_NAME completo: ${CI_REGISTRY_IMAGE}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
-    - echo "DEBUG - Variável final IMAGE_NAME: $IMAGE_NAME"
-    - docker build -t "$IMAGE_NAME" .
-    - docker push "$IMAGE_NAME"
+    - |
+      echo "DEBUG - CI_REGISTRY_IMAGE: $CI_REGISTRY_IMAGE"
+      echo "DEBUG - CI_COMMIT_REF_SLUG: $CI_COMMIT_REF_SLUG"
+      echo "DEBUG - Parte 1: ${CI_REGISTRY_IMAGE}/$CI_COMMIT_REF_SLUG:"
+      echo "DEBUG - Parte 2: $CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
+      echo "DEBUG - IMAGE_NAME completo: ${CI_REGISTRY_IMAGE}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
+      echo "DEBUG - Variável final IMAGE_NAME: $IMAGE_NAME"
+      docker build -t "$IMAGE_NAME" .
+      docker push "$IMAGE_NAME"
   only:
     - merge_requests
     - master
