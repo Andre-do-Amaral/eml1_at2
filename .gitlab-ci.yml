@@ -57,8 +57,9 @@ integration_test:
   tags:
     - docker
   script:
-    - echo "Rodando imagem: $IMAGE_NAME"
-    - docker run --rm "$IMAGE_NAME"
+    - |
+      echo "Rodando imagem: $IMAGE_NAME"
+      docker run --rm "$IMAGE_NAME"
   only:
     - release
 
