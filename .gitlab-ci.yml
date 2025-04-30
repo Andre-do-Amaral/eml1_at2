@@ -3,9 +3,9 @@ stages:
   - test
 
 variables:
-  DOCKER_DRIVER: overlay2  # Para evitar problemas de filesystem
-  DOCKER_TLS_CERTDIR: ""   # Desabilita TLS interno para Docker no GitLab Runner
-  IMAGE_NAME: "${CI_REGISTRY_IMAGE}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  IMAGE_NAME: "${CI_REGISTRY_IMAGE}/${CI_COMMIT_REF_SLUG:-latest}:${CI_COMMIT_REF_SLUG:-latest}"
 
 cache:
   paths:
@@ -14,24 +14,26 @@ cache:
     - ~/.cache/pypoetry
     - ~/.cache/pip
 
-# Etapa para construir a imagem Docker
 build_image:
   stage: build
   image: docker:latest
   services:
     - docker:dind
   script:
-    - |
-      echo "IMAGE_NAME: $IMAGE_NAME"
-      docker build -t "$IMAGE_NAME" .
-      docker push "$IMAGE_NAME"
+    - echo "DEBUG - CI_REGISTRY_IMAGE: $CI_REGISTRY_IMAGE"
+    - echo "DEBUG - CI_COMMIT_REF_SLUG: $CI_COMMIT_REF_SLUG"
+    - echo "DEBUG - Parte 1: ${CI_REGISTRY_IMAGE}/$CI_COMMIT_REF_SLUG:"
+    - echo "DEBUG - Parte 2: $CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
+    - echo "DEBUG - IMAGE_NAME completo: ${CI_REGISTRY_IMAGE}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
+    - echo "DEBUG - Variável final IMAGE_NAME: $IMAGE_NAME"
+    - docker build -t "$IMAGE_NAME" .
+    - docker push "$IMAGE_NAME"
   only:
     - merge_requests
     - master
     - release
     - /^feature\/.*$/
 
-# Etapa para rodar os testes de unidade
 unit_tests:
   stage: test
   image: python:3.12
@@ -46,7 +48,6 @@ unit_tests:
   only:
     - /^feature\/.*$/
 
-# Etapa para rodar o seu evaluate com o MLflow rodando
 integration_test:
   stage: test
   image: docker:latest
@@ -55,11 +56,11 @@ integration_test:
   tags:
     - docker
   script:
+    - echo "Rodando imagem: $IMAGE_NAME"
     - docker run --rm "$IMAGE_NAME"
   only:
     - release
 
-# Etapa para não rodar nada na main se não precisar
 skip_main:
   stage: test
   tags:
