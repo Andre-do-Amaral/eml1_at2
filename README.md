@@ -89,12 +89,11 @@ meu_projeto/
 ├── dockerfile             # Dockerfile do servidor MLflow
 ├── src/
 ├──── data/
-│
+│   ├── waterpotability.csv     # Arquivo de dados para predição
 │   ├── main.py             # Script principal (pipeline completo)
 │   ├── models/             # Funções para utilizar modelos ML
 │   └── data/               # Funções para utilizar os dados (preprocessamento,carregamento)
 ├── mlruns/                 # Armazenamento dos experimentos
-├── waterpotability.csv     # Arquivo de dados para predição
 └── README.md
 
 
@@ -104,17 +103,22 @@ meu_projeto/
 
 Este projeto também está preparado com um pipeline de CI/CD no GitLab para automatizar testes e validações a cada mudança no código. 🛠️
 
+
 ## 📄 Estrutura do .gitlab-ci.yml
 
-O arquivo .gitlab-ci.yml define 3 jobs diferentes, divididos em stages:
+O arquivo .gitlab-ci.yml define 3 jobs diferentes e 3 stages:
 
+Stages: 
+- build -> cria imagem docker e registra em um repositório.
+- test -> atrelado ao job unit_tests para realizar testes unitários
+- run -> atrelado aos jobs run_mlflow e run_script que fazem parte das rodadas para executar o main.py e tambem subir o mlflow.
 
 Job	Quando Roda	O Que Faz:
 
 - unit_tests	Feature Branches (feature/*)	Executa testes unitários com pytest
 integration_test	
 
-- Branch de Release (release)	Executa o pipeline de machine learning para testes de integração
+- Branch de Release (release)	Executa o pipeline de machine learning para testes de integração e se está funcionando o codigo.
 
 - skip_main	Branch Principal (master)	Não executa testes; apenas registra um log
 
@@ -132,17 +136,30 @@ Instala dependências com poetry.
 
 Roda todos os testes localizados dentro da pasta tests/ usando pytest.
 
-🔹 integration_test
+🔹 run_mlflow 
 
-Objetivo: Validar o pipeline completo de machine learning.
+Objetivo: é rodar um container Docker com a imagem criada no pipeline, que provavelmente é um serviço relacionado ao MLflow, já que ele expõe a porta 5000 (porta padrão do MLFLOW)
 
 Quando é executado: Quando um push é feito para uma branch chamada release.
 
+obs: docker:dind (Docker-in-Docker) é um serviço necessário para permitir a execução de containers Docker dentro do CI. Esse serviço permite criar, rodar e manipular containers dentro do ambiente Docker do GitLab CI.
+
 O que acontece:
 
-Instala dependências com poetry.
+Printa na tela o CI_REGISTRY_USER e o CI_REGISTRY_PASSOWRD e em seguida sobe o container docker (IMAGEM SUBIDA EM BUILD) expondo a porta 5000. CMD:docker run -d -p 5000:5000 "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG"
 
-Executa o script principal src/main.py, simulando uma execução real do projeto.
+
+ 🔹 run_script
+
+ Objetivo: Faz um teste de execução do script main.py voltado para a função de evaluate (porque ai tem que treinar o modelo, predizer e depois avaliar, ou seja, processo completo)
+
+
+ Quando é executado: Push na branch release
+
+ O que acontece:
+
+ O job run_script cria um ambiente Docker, faz o login no Docker Registry do GitLab, puxa a imagem do projeto, e executa o script main.py evaluate no ambiente Docker, o que provavelmente realiza uma avaliação de um modelo de machine learning
+
 
  🔹 skip_main
 
@@ -159,6 +176,7 @@ Apenas imprime a mensagem: "Nada é executado na master".
 Para que o pipeline do GitLab funcione, é necessário configurar um GitLab Runner — um executor que irá rodar os jobs definidos no .gitlab-ci.yml.
 
 Aqui está um passo a passo detalhado:
+
 
 ##### 1. Instalar o GitLab Runner
 No seu servidor ou máquina local (Linux, Windows ou Mac):
@@ -237,6 +255,11 @@ Certifique-se de que o arquivo .gitlab-ci.yml esteja na raiz do projeto.
 Instale o pytest e configure seus testes no diretório tests/.
 
 Sempre nomeie corretamente as branches para que os jobs corretos sejam disparados.
+
+obs: token de acesso deve conter write_registry
+
+obs: observar os locais de salvamento da imagem docker -> deve ser referente ao projeto e repositorio, como aqui: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:$CI_COMMIT_REF_SLUG -> Saída no caso do nosso grupo: https://gitlab.com/andrejefferson/atividade-eml2_1
+
 
 #### 🧠 Conclusão
 Além da execução local via Docker, o projeto também possui automação de testes e validações via GitLab CI/CD, garantindo mais segurança, padronização e qualidade no desenvolvimento. 🚀
