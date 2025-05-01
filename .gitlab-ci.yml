@@ -20,7 +20,13 @@ build_image:
   services:
     - docker:dind
   before_script:
-    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin "$CI_REGISTRY"
+  - |
+    echo "IMAGE LOCAL -> ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
+    echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+    echo "Registry URL: $CI_REGISTRY"
+    echo "Namespace: $CI_PROJECT_NAMESPACE"
+    echo "Project: $CI_PROJECT_NAME"
+
   # docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
     - |
