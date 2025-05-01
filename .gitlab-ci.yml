@@ -8,6 +8,8 @@ variables:
   IMAGE_NAME: "${CI_REGISTRY_IMAGE%/}/${CI_COMMIT_REF_SLUG:-latest}:${CI_COMMIT_REF_SLUG:-latest}"
   IMAGE_NAME2: "${CI_REGISTRY_IMAGE:-myimage}:${CI_COMMIT_REF_SLUG:-latest}"
   IMAGE_NAME3: "${CI_REGISTRY_IMAGE:-mygroup/myproject}:${CI_COMMIT_REF_SLUG:-latest}"
+  IMAGE_NAME4: "${CI_REGISTRY_IMAGE}/${CI_COMMIT_REF_SLUG:-latest}:${CI_COMMIT_REF_SLUG:-latest}"
+  IMAGE_NAME5: "${CI_REGISTRY_IMAGE}${CI_COMMIT_REF_SLUG:-latest}:${CI_COMMIT_REF_SLUG:-latest}"
 
 
 cache:
@@ -32,6 +34,8 @@ build_image:
       echo "DEBUG - Variável final IMAGE_NAME: $IMAGE_NAME"
       echo "DEBUG - Variável final IMAGE_NAME2: $IMAGE_NAME2"
       echo "DEBUG - Variável final IMAGE_NAME3: $IMAGE_NAME3"
+      echo "DEBUG - Variável final IMAGE_NAME4: $IMAGE_NAME4"
+      echo "DEBUG - Variável final IMAGE_NAME5: $IMAGE_NAME5"
       docker build -t "$IMAGE_NAME" .
       docker push "$IMAGE_NAME"
   only:
