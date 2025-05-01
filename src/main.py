@@ -8,6 +8,7 @@ from models.evaluator import evaluate_model
 import argparse
 import pandas as pd
 import mlflow
+import os
 
 
 # Função para registrar experimento no MLflow
@@ -61,7 +62,8 @@ def predict(model, X_predict):
 
 # CLI para gerenciar os comandos
 def main():
-    df = load_data("water_potability.csv")  # caminho
+    print("Caminho atual:", os.getcwd())
+    df = load_data("/root/MEU_PROJETO/src/water_potability.csv")  # caminho
     X_train, X_test, X_val, y_train, y_test, y_val = split_data(
         df, "Potability"
     )  # target
