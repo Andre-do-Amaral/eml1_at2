@@ -55,7 +55,10 @@ run_mlflow:
   services:
     - docker:dind
   script:
-    - docker run -d -p 5000:5000 "$IMAGE_NAME"
+    - |
+      echo "USER -> $CI_REGISTRY_USER"
+      echo "PASSWORD -> $CI_REGISTRY_PASSWORD"
+      docker run -d -p 5000:5000 "$IMAGE_NAME"
   only:
     - release
 
@@ -66,7 +69,10 @@ run_script:
   services:
     - docker:dind
   script:
-    - docker run --rm "$IMAGE_NAME" poetry run python src/main.py evaluate
+    - |
+      echo "USER -> $CI_REGISTRY_USER"
+      echo "PASSWORD -> $CI_REGISTRY_PASSWORD"
+      docker run --rm "$IMAGE_NAME" poetry run python src/main.py evaluate
   only:
     - release
 
