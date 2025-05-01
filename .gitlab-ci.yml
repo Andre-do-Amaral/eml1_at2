@@ -5,18 +5,7 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
-  IMAGE_NAME5: "${CI_REGISTRY_IMAGE%/}/${CI_COMMIT_REF_SLUG:-latest}:${CI_COMMIT_REF_SLUG:-latest}"
-  IMAGE_NAME2: "${CI_REGISTRY_IMAGE:-myimage}:${CI_COMMIT_REF_SLUG:-latest}"
-  IMAGE_NAME3: "${CI_REGISTRY_IMAGE:-mygroup/myproject}:${CI_COMMIT_REF_SLUG:-latest}"
-  IMAGE_NAME4: "${CI_REGISTRY_IMAGE}/${CI_COMMIT_REF_SLUG:-latest}:${CI_COMMIT_REF_SLUG:-latest}"
-  IMAGE_NAME9: "${CI_REGISTRY_IMAGE}${CI_COMMIT_REF_SLUG:-latest}:${CI_COMMIT_REF_SLUG:-latest}"
-  IMAGE_NAME6: "${CI_REGISTRY_IMAGE}${CI_COMMIT_REF_SLUG:-latest}:${CI_COMMIT_REF_SLUG:-latest}"
-  IMAGE_NAME7: "${CI_REGISTRY_IMAGE}$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
-  IMAGE_NAME8: "${CI_REGISTRY_IMAGE}${CI_COMMIT_REF_SLUG:-latest}"
-  IMAGE_NAME10: "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
-  IMAGE_NAME: "${CI_REGISTRY_IMAGE}$CI_COMMIT_REF_SLUG:"
-
-
+  
 cache:
   paths:
     - .cache/pip
@@ -31,27 +20,9 @@ build_image:
     - docker:dind
   script:
     - |
-      echo "DEBUG - CI_REGISTRY_IMAGE: $CI_REGISTRY_IMAGE"
-      echo "DEBUG - CI_COMMIT_REF_SLUG: $CI_COMMIT_REF_SLUG"
-      echo "DEBUG - Parte 1: ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
-      echo "DEBUG - Parte 2: $CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
-      echo "DEBUG - IMAGE_NAME completo: ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
-      echo "DEBUG - Variável final IMAGE_NAME: $IMAGE_NAME"
-      echo "DEBUG - Variável final IMAGE_NAME2: $IMAGE_NAME2"
-      echo "DEBUG - Variável final IMAGE_NAME3: $IMAGE_NAME3"
-      echo "DEBUG - Variável final IMAGE_NAME4: $IMAGE_NAME4"
-      echo "DEBUG - Variável final IMAGE_NAME5: $IMAGE_NAME5"
-      echo "DEBUG - Variável final IMAGE_NAME6: $IMAGE_NAME6"
-      echo "DEBUG - Variável final IMAGE_NAME7: $IMAGE_NAME7"
-      echo "DEBUG - Variável final IMAGE_NAME8: $IMAGE_NAME8"
-      echo "DEBUG - Variável final IMAGE_NAME9: $IMAGE_NAME9"
-      echo "DEBUG - Variável final IMAGE_NAME10: $IMAGE_NAME10"
-      echo "DEBUG - TEM QUE FUNCIONAR ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
-      echo "DEBUG - docker build -t ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
       docker build -t "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}" .
       docker push "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
-      docker build -t "$IMAGE_NAME" .
-      docker push "$IMAGE_NAME"
+
   only:
     - merge_requests
     - master
