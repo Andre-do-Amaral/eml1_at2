@@ -47,7 +47,8 @@ build_image:
       echo "DEBUG - Variável final IMAGE_NAME9: $IMAGE_NAME9"
       echo "DEBUG - Variável final IMAGE_NAME10: $IMAGE_NAME10"
       echo "DEBUG - TEM QUE FUNCIONAR ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
-      docker build -t "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
+      echo "DEBUG - docker build -t ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
+      docker build -t "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:" .
       docker push "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
       docker build -t "$IMAGE_NAME" .
       docker push "$IMAGE_NAME"
