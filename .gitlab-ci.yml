@@ -48,8 +48,8 @@ build_image:
       echo "DEBUG - Variável final IMAGE_NAME10: $IMAGE_NAME10"
       echo "DEBUG - TEM QUE FUNCIONAR ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
       echo "DEBUG - docker build -t ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
-      docker build -t "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:" .
-      docker push "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
+      docker build -t "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}" .
+      docker push "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
       docker build -t "$IMAGE_NAME" .
       docker push "$IMAGE_NAME"
   only:
@@ -81,8 +81,8 @@ integration_test:
     - docker
   script:
     - |
-      echo "Rodando imagem: $IMAGE_NAME"
-      docker run --rm "$IMAGE_NAME"
+      echo "Rodando imagem: ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
+      docker run --rm "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
   only:
     - release
 
