@@ -31,7 +31,7 @@ build_image:
     - docker:dind
   script:
     - |
-      echo "DEBUG - CI_REGISTRY_IMAGE: $CI_REGISTRY_IMAGE%/"
+      echo "DEBUG - CI_REGISTRY_IMAGE: $CI_REGISTRY_IMAGE"
       echo "DEBUG - CI_COMMIT_REF_SLUG: $CI_COMMIT_REF_SLUG"
       echo "DEBUG - Parte 1: ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
       echo "DEBUG - Parte 2: $CI_COMMIT_REF_SLUG:${CI_COMMIT_REF_SLUG:-latest}"
@@ -46,6 +46,9 @@ build_image:
       echo "DEBUG - Variável final IMAGE_NAME8: $IMAGE_NAME8"
       echo "DEBUG - Variável final IMAGE_NAME9: $IMAGE_NAME9"
       echo "DEBUG - Variável final IMAGE_NAME10: $IMAGE_NAME10"
+      echo "DEBUG - TEM QUE FUNCIONAR ${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
+      docker build -t "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
+      docker push "${CI_REGISTRY_IMAGE%/}/$CI_COMMIT_REF_SLUG:"
       docker build -t "$IMAGE_NAME" .
       docker push "$IMAGE_NAME"
   only:
