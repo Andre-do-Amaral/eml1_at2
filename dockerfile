@@ -21,4 +21,4 @@ COPY tests/ ./tests/
 EXPOSE 5000
 
 # Comando principal: executar o mlflow server em segundo plano e depois o script do experimento
-CMD mlflow server --host 0.0.0.0 --port 5000 & poetry run python src/main.py evaluate
+CMD ["poetry", "run", "mlflow", "server", "--host", "0.0.0.0", "--port", "5000", "--backend-store-uri", "sqlite:///mlflow.db", "--default-artifact-root", "/root/MEU_PROJETO/mlruns"]
