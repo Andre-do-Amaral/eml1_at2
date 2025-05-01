@@ -16,7 +16,6 @@ RUN pip install mlflow
 # Copiar o restante do código do projeto -> main.py, etc.
 COPY src/ ./src/
 COPY tests/ ./tests/
-COPY water_potability.csv ./
 
 # Expor a porta 5000 (MLflow usa por padrão essa porta)
 EXPOSE 5000
