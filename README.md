@@ -241,7 +241,7 @@ Sempre nomeie corretamente as branches para que os jobs corretos sejam disparado
 #### 🧠 Conclusão
 Além da execução local via Docker, o projeto também possui automação de testes e validações via GitLab CI/CD, garantindo mais segurança, padronização e qualidade no desenvolvimento. 🚀
 
-
+## NAO ESQUECER DE COLOCAR ESSES COMANDOS PARA RODAR NO GITLAB AS JOBS
 
 ### AUTORES
 
